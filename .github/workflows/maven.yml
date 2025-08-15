@@ -43,7 +43,5 @@ jobs:
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v4
         with:
-          name: librespot-artifacts
-          path: |
-            player/target/librespot-player-*.jar
-            api/target/librespot-api-*.jar
+          name: librespot-player
+          path: player/target/librespot-player.jar
