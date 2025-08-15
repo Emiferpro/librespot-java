@@ -41,7 +41,7 @@ jobs:
         run: mvn clean package -B -U -Dmaven.javadoc.skip=true -Dgpg.skip
 
       - name: Upload artifacts to GitHub Actions
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: librespot-artifacts
           path: |
