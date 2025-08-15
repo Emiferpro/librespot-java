@@ -38,30 +38,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Build with Maven
-        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-        run: mvn clean test -Pdebug -B -U -Dgpg.skip -Dmaven.javadoc.skip=true
-      - name: Deploy with Maven to OSSRH
-        if: ${{ !startsWith(github.ref, 'refs/pull') }}
-        run: mvn deploy --settings .maven.xml -B -U -Possrh
-        env:
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      - name: Deploy with Maven to GitHub packages
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        run: mvn deploy --settings .maven.xml -B -U -Pgithub
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create release
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn clean package -B -U -Dmaven.javadoc.skip=true -Dgpg.skip
+
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.ref }}
-          draft: true
-          prerelease: false
-          files: |
+          name: librespot-artifacts
+          path: |
             player/target/librespot-player-*.jar
             api/target/librespot-api-*.jar
